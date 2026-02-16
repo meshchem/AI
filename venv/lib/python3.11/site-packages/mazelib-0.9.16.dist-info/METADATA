@@ -1,0 +1,80 @@
+Metadata-Version: 2.1
+Name: mazelib
+Version: 0.9.16
+Summary: A Python API for creating and solving mazes.
+Author: John Stilley
+License: MIT License
+        
+        Copyright (c) [2014] [John Stilley]
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+Project-URL: Homepage, https://github.com/john-science/mazelib
+Project-URL: Bug Tracker, https://github.com/john-science/mazelib/issues
+Classifier: Development Status :: 4 - Beta
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Games/Entertainment :: Puzzle Games
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Natural Language :: English
+Requires-Python: <3.14,>=3.7.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: cython
+Requires-Dist: numpy
+Provides-Extra: dev
+Requires-Dist: black==24.10.0; extra == "dev"
+Requires-Dist: ruff==0.7.4; extra == "dev"
+Requires-Dist: toml==0.10.2; extra == "dev"
+Requires-Dist: twine==4.0.2; extra == "dev"
+Provides-Extra: pytest
+Requires-Dist: pytest; extra == "pytest"
+Requires-Dist: pytest-cov; extra == "pytest"
+
+# mazelib
+[![Build Status](https://github.com/john-science/mazelib/actions/workflows/unittests.yaml/badge.svg?branch=main)](https://github.com/john-science/mazelib/blob/main/.github/workflows/unittests.yaml)
+[![codecov](https://codecov.io/gh/john-science/mazelib/branch/main/graph/badge.svg)](https://codecov.io/gh/john-science/mazelib)
+
+#### A Python API for creating and solving mazes.
+
+## [The mazelib API](https://github.com/john-science/mazelib/blob/main/docs/API.md)
+
+A quick introduction in how to use this library.
+
+
+## [Display Examples](https://github.com/john-science/mazelib/blob/main/docs/EXAMPLES.md)
+
+Examples of how to generate and solve some unique, tailored mazes. Also, examples of how to plot your results.
+
+
+## Maze Algorithms
+
+The heart of this library is the huge collection of algorithms available to create and solve mazes. The better you understand these, the more you can do with this library.
+
+### [Maze-Generating Algorithms](https://github.com/john-science/mazelib/blob/main/docs/MAZE_GEN_ALGOS.md)
+
+### [Maze-Transmuting Algorithms](https://github.com/john-science/mazelib/blob/main/docs/MAZE_TRANSMUTE_ALGOS.md)
+
+### [Maze-Solving Algorithms](https://github.com/john-science/mazelib/blob/main/docs/MAZE_SOLVE_ALGOS.md)
