@@ -1,4 +1,5 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from collections import deque
 from typing import List
 from src.maze_generator import MazeData, Coord, get_neighbours
 
@@ -28,14 +29,14 @@ def bfs(maze: MazeData) -> SearchResult:
 
     # Queue holds the current path from start to the node being explored.
     # Each entry is a list of coords representing the path so far.
-    queue: List[List[Coord]] = [[start]]
+    queue: deque[List[Coord]] = deque([[start]])
 
     visited: List[Coord] = []
     seen = set()
     seen.add(start)
 
     while queue:
-        path = queue.shift(0)       # FIFO — take the earliest added path
+        path = queue.popleft()      # FIFO — take the earliest added path
         current = path[-1]          # the node at the end of this path
 
         visited.append(current)
