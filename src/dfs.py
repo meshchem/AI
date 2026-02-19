@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List
-from src.maze_generator import MazeData, Coord, get_neighbours
+from src.create_maze import MazeData, Coord, get_neighbours
 
 
 @dataclass

@@ -3,7 +3,7 @@ import heapq
 from typing import List, Dict
 import math
 
-from src.maze_generator import MazeData, Coord, get_neighbours
+from src.create_maze import MazeData, Coord, get_neighbours
 from src.dfs import SearchResult
 
 
