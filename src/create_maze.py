@@ -109,7 +109,7 @@ def print_maze(grid: List[List[int]], start: Coord = None, goal: Coord = None):
         print(line)
 
 # Visualise maze using matplotlib:
-def plot_maze(grid, start=None, goal=None, path=None, title=None):
+def plot_maze(grid, start=None, goal=None, path=None, title=None, save_path: str = None):
   
     arr = np.array(grid)
 
@@ -134,7 +134,13 @@ def plot_maze(grid, start=None, goal=None, path=None, title=None):
     plt.yticks([])
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved plot to {save_path}")
+        plt.close()
+    else:
+        plt.show()
 
 #  Save a maze to a JSON file (stores grid, start, goal, and seed for reproducability)
 def save_maze(maze: MazeData, filepath: str):

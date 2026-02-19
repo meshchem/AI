@@ -11,16 +11,6 @@ class SearchResult:
     path_length: int          # number of steps in the solution path
     nodes_explored: int       # total nodes popped from the frontier
 
-    """
-    Bredth-First Search maze solver.
-
-    Uses an explicit stack (LIFO) to explore the maze.
-    Does NOT guarantee the shortest path — it returns the first
-    path found, which depends on neighbour ordering.
-
-    Time complexity  : O(V + E)  where V = cells, E = passages
-    Space complexity : O(V)      in the worst case (deep recursion / long stack)
-    """
 
 def bfs(maze: MazeData) -> SearchResult:
     start = maze.start

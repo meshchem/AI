@@ -1,33 +1,24 @@
-"""
-Visualisation utilities for MDP results.
-
-Provides two plots:
-  1. Value function heatmap — how "good" each cell is
-  2. Policy arrows — which direction the agent should move from each cell
-"""
-
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
+# import matplotlib.patches as mpatches
 import numpy as np
 
 from src.create_maze import MazeData
-from src.mdp import MDPResult, ACTIONS
+from src.mdp_algorithms import ValueIterationResult
 
 
-# Arrow direction vectors for policy visualisation
-_ARROW = {
-    "UP":    ( 0, -0.3),
-    "DOWN":  ( 0,  0.3),
-    "LEFT":  (-0.3,  0),
-    "RIGHT": ( 0.3,  0),
+# Arrow direction vectors for policy visualization
+arrow = {
+    "up":    (0, -0.3),
+    "down":  (0,  0.3),
+    "left":  (-0.3,  0),
+    "right": (0.3,  0),
 }
 
 
-def plot_value_function(maze: MazeData, result: MDPResult, title: str = "Value Function"):
-    """
-    Plot the value function as a heatmap overlaid on the maze.
-    Brighter cells have higher value (closer to goal under optimal policy).
-    """
+# Plot the value function as a heatmap overlaid on the maze.
+# Brighter cells have higher value (closer to goal under optimal policy).
+def plot_value_function(maze: MazeData, result: ValueIterationResult, title: str = "Value Function", save_path: str = None):
+  
     grid = maze.grid
     rows, cols = len(grid), len(grid[0])
 
@@ -47,22 +38,26 @@ def plot_value_function(maze: MazeData, result: MDPResult, title: str = "Value F
     plt.colorbar(im, ax=ax, fraction=0.046, label="V(s)")
 
     # Mark start and goal
-    ax.scatter(maze.start[1], maze.start[0], c="green", s=120, zorder=5, label="Start")
-    ax.scatter(maze.goal[1],  maze.goal[0],  c="red",   s=120, zorder=5, label="Goal")
+    ax.scatter(maze.start[1], maze.start[0], c="green", s=100, zorder=5, label="Start")
+    ax.scatter(maze.goal[1],  maze.goal[0],  c="red",   s=100, zorder=5, label="Goal")
 
     ax.set_title(title)
     ax.set_xticks([])
     ax.set_yticks([])
     ax.legend()
     plt.tight_layout()
-    plt.show()
 
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved plot to {save_path}")
+        plt.close()  # Close after saving
+    else:
+        plt.show()
 
-def plot_policy(maze: MazeData, result: MDPResult, title: str = "Policy"):
-    """
-    Plot the policy as directional arrows overlaid on the maze.
-    Each free cell shows an arrow indicating the best action.
-    """
+# Plot the policy as directional arrows overlaid on the maze.
+# Each free cell shows an arrow indicating the best action.
+def plot_policy(maze: MazeData, result: ValueIterationResult, title: str = "Policy", save_path: str = None):
+   
     grid = maze.grid
     rows, cols = len(grid), len(grid[0])
 
@@ -74,8 +69,8 @@ def plot_policy(maze: MazeData, result: MDPResult, title: str = "Policy"):
     # Draw policy arrows
     for (r, c), action in result.policy.items():
         if action is None:
-            continue  # goal cell — no arrow
-        dx, dy = _ARROW[action]
+            continue  # goal node —> no arrow
+        dx, dy = arrow[action]
         ax.annotate(
             "",
             xy=(c + dx, r + dy),
@@ -90,18 +85,35 @@ def plot_policy(maze: MazeData, result: MDPResult, title: str = "Policy"):
         ax.plot(xs, ys, c="orange", linewidth=2, zorder=4, label="Path")
 
     # Mark start and goal
-    ax.scatter(maze.start[1], maze.start[0], c="green", s=120, zorder=5, label="Start")
-    ax.scatter(maze.goal[1],  maze.goal[0],  c="red",   s=120, zorder=5, label="Goal")
+    ax.scatter(maze.start[1], maze.start[0], c="green", s=100, zorder=5, label="Start")
+    ax.scatter(maze.goal[1],  maze.goal[0],  c="red",   s=100, zorder=5, label="Goal")
 
     ax.set_title(title)
     ax.set_xticks([])
     ax.set_yticks([])
     ax.legend()
     plt.tight_layout()
-    plt.show()
+    
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+        print(f"Saved plot to {save_path}")
+        plt.close()
+    else:
+        plt.show()
+
+#  plots both value function and policy side by side
+def plot_mdp_results(maze: MazeData, result: ValueIterationResult, algorithm: str, size: str, save_dir: str = None):
+    if save_dir:
+        import os
+        os.makedirs(save_dir, exist_ok=True)
+        
+        value_path = os.path.join(save_dir, f"{algorithm.replace(' ', '_').lower()}_value_{size}.png")
+        policy_path = os.path.join(save_dir, f"{algorithm.replace(' ', '_').lower()}_policy_{size}.png")
+        
+        plot_value_function(maze, result, title=f"{algorithm} Value Function — {size}", save_path=value_path)
+        plot_policy(maze, result, title=f"{algorithm} Policy — {size}", save_path=policy_path)
+    else:
+        plot_value_function(maze, result, title=f"{algorithm} Value Function — {size}")
+        plot_policy(maze, result, title=f"{algorithm} Policy — {size}")
 
 
-def plot_mdp_results(maze: MazeData, result: MDPResult, algorithm: str, size: str):
-    """Convenience wrapper — plots both value function and policy side by side."""
-    plot_value_function(maze, result, title=f"{algorithm} Value Function — {size}")
-    plot_policy(maze, result, title=f"{algorithm} Policy — {size}")

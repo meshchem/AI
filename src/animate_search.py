@@ -6,7 +6,7 @@ from typing import List
 from src.create_maze import MazeData, Coord
 
     # Parameters:
-    #     maze: MazeData with grid, start, goal
+    #     maze: 
     #     visited: nodes explored in order (from SearchResult.visited)
     #     path: final solution path (from SearchResult.path)
     #     algorithm_name: e.g. "BFS", "DFS", "A* Manhattan"
@@ -16,17 +16,17 @@ from src.create_maze import MazeData, Coord
   
 
 def animate_search(
-    maze: MazeData,
-    visited: List[Coord],
-    path: List[Coord],
-    algorithm_name: str,
-    output_file: str = None,
+    maze: MazeData,             #  grid, start, goal
+    visited: List[Coord],       #  nodes explored in order
+    path: List[Coord],          #  final path
+    algorithm_name: str,        
+    output_file: str = None,    
     fps: int = 10,              # frames per second
-    show: bool = True,
+    show: bool = True,          
 ):
     
     grid = maze.grid
-    rows, cols = len(grid), len(grid[0])
+    # rows, cols = len(grid), len(grid[0])
 
     fig, ax = plt.subplots(figsize=(8, 8))
 
@@ -119,7 +119,7 @@ def animate_search(
     if output_file:
         writer = animation.FFMpegWriter(fps=fps, bitrate=1800)
         animation_object.save(output_file, writer=writer)
-        print(f"Animation directory:: {output_file}")
+        print(f"Animation directory: {output_file}")
 
     if show:
         plt.tight_layout()
@@ -128,7 +128,7 @@ def animate_search(
     return animation_object
 
 
-def animate_all_algorithms(
+def animate_search_algorithms(
     maze: MazeData,
     results: dict,
     output_dir: str = "videos",
@@ -149,5 +149,5 @@ def animate_all_algorithms(
             algorithm_name=name,
             output_file=output_file,
             fps=fps,
-            show=False,  # don't display interactively when batch processing
+            show=False, 
         )

@@ -25,7 +25,7 @@ def _compute_iteration_snapshots(maze: MazeData, algorithm: str, max_snapshots: 
     
     Returns list of (iteration, values, policy, converged) tuples.
     """
-    from src.mdp import (
+    from src.old_mdp.mdp import (
         GAMMA, LIVING_REWARD, GOAL_REWARD, THETA, ACTIONS,
         _free_cells, _bellman_value
     )

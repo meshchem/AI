@@ -2,26 +2,34 @@ from dataclasses import dataclass
 from typing import List, Tuple, Dict, Optional
 import numpy as np
 
-from create_maze import MazeData, Coord, load_maze
+from src.create_maze import MazeData, Coord, load_maze
+
+@dataclass
+class ValueIterationResult:
+    policy: Dict[Coord, str]
+    values: Dict[Coord, float]
+    path: List[Coord]
+    path_length: int
+    nodes_explored: int
+    iterations: int
 
 
 # Algorithm parameters
-gamma = 0.9               # discount factor
-theta = 1e-6              # convergence threshold
+gamma = 0.9              # discount factor
+theta = 1e-4              # convergence threshold
 
 # Rewards
-step_cost = -1            # normal direction_deltas
-goal_reward = 1       # reaching goal
+step_cost = -0.04     
+goal_reward = 1      
 
-# actions (lowercase) - redirection_deltasd "stay"
+# actions 
 actions = ["up", "down", "left", "right"]
-direction_deltas = {
+action_deltas = {
     "up": (-1, 0),
     "down": (1, 0),
     "left": (0, -1),
     "right": (0, 1),
 }
-
 
 def get_states(maze: MazeData) -> List[Coord]:
     states = []
@@ -33,16 +41,15 @@ def get_states(maze: MazeData) -> List[Coord]:
 
 #   Get next state after taking action a from state s.
 def get_next_state(maze: MazeData, s: Coord, a: str) -> Coord:
-    dr, dc = direction_deltas[a]
+    dr, dc = action_deltas[a]
     next_r, next_c = s[0] + dr, s[1] + dc
     
     rows, cols = len(maze.grid), len(maze.grid[0])
     
-    # Check if next position is valid (in bounds and not a wall)
+    # Check if next position is valid (no a wall)
     if 0 <= next_r < rows and 0 <= next_c < cols and maze.grid[next_r][next_c] == 0:
         return (next_r, next_c)
     else:
-        # Hit wall or boundary - stay in current state
         return s
 
 # 
@@ -50,18 +57,18 @@ def get_reward(maze: MazeData, s: Coord, a: str) -> float:
 
     next_state = get_next_state(maze, s, a)
     
-    # Check if we reached the goal
+    # Check if goal was reached
     if next_state == maze.goal:
         return goal_reward  # +1
     
-    # Normal direction_deltas (even if bounced off wall)
-    return step_cost  # -1
+    # Normal action_deltas costs
+    return step_cost 
 
 
 # maze: MazeData object containing grid, start, goal
 # gamma: discount factor (default 0.9)
 # theta: convergence threshold (default 1e-6)
-def value_iteration_with_walls(maze: MazeData, gamma=gamma, theta=theta) -> Tuple[Dict[Coord, str], Dict[Coord, float]]:
+def value_iteration(maze: MazeData, gamma=gamma, theta=theta) -> Tuple[Dict[Coord, str], Dict[Coord, float]]:
 
     # Get all states
     states = get_states(maze)
@@ -81,7 +88,7 @@ def value_iteration_with_walls(maze: MazeData, gamma=gamma, theta=theta) -> Tupl
         # For each state
         for s in states:
             if s == maze.goal:
-                # Terminal state - value stays at goal reward
+                # final state, no actions needed
                 continue
             
             v_old = V[s]
@@ -89,7 +96,7 @@ def value_iteration_with_walls(maze: MazeData, gamma=gamma, theta=theta) -> Tupl
             # Compute value for each action
             action_values = []
             for a in actions:
-                # Get next state (might be same state if hit wall)
+                # Get next state
                 s_next = get_next_state(maze, s, a)
                 
                 # Get immediate reward
@@ -111,7 +118,7 @@ def value_iteration_with_walls(maze: MazeData, gamma=gamma, theta=theta) -> Tupl
         if delta < theta:
             break
         
-        # Safety check
+        # Iteration check
         if iterations > 10000:
             print("Warning: Max iterations reached, stopping early")
             break
@@ -140,10 +147,111 @@ def value_iteration_with_walls(maze: MazeData, gamma=gamma, theta=theta) -> Tupl
     
     print(f"Value Iteration converged in {iterations} iterations")
 
-    # policy: Dict mapping state -> best action
-    # V: Dict mapping state -> value
+    path = extract_path(maze, policy)
     
-    return policy, V
+    return ValueIterationResult(
+        policy=policy,
+        values=V,
+        path=path,
+        path_length=len(path),
+        nodes_explored=len(V),
+        iterations=iterations,
+    )
+
+
+def policy_iteration(maze: MazeData, gamma=gamma, theta=theta) -> ValueIterationResult:
+   
+    # Get all states
+    states = get_states(maze)
+    
+    # Initialize policy (everyone goes down initially)
+    policy = {s: "down" for s in states}
+    policy[maze.goal] = None
+    
+    # Initialize value function
+    V = {s: 0.0 for s in states}
+    V[maze.goal] = goal_reward
+    
+    iterations = 0
+    
+    # Policy Iteration: alternate evaluation and improvement
+    while True:
+        # Policy Evaluation 
+        # Compute V^π for current policy
+        while True:
+            delta = 0
+            
+            for s in states:
+                if s == maze.goal:
+                    continue
+                
+                v_old = V[s]
+                
+                # Follow current policy
+                action = policy[s]
+                s_next = get_next_state(maze, s, action)
+                reward = get_reward(maze, s, action)
+                
+                # V^π(s) = R(s,π(s)) + γ * V^π(s')
+                V[s] = reward + gamma * V[s_next]
+                
+                delta = max(delta, abs(v_old - V[s]))
+            
+            # Check if values converged for this policy
+            if delta < theta:
+                break
+        
+        # Policy Improvement
+        policy_stable = True
+        
+        for s in states:
+            if s == maze.goal:
+                continue
+            
+            old_action = policy[s]
+            
+            # best action according to current values
+            best_action = None
+            best_value = float('-inf')
+            
+            for a in actions:
+                s_next = get_next_state(maze, s, a)
+                reward = get_reward(maze, s, a)
+                q_value = reward + gamma * V[s_next]
+                
+                if q_value > best_value:
+                    best_value = q_value
+                    best_action = a
+            
+            policy[s] = best_action
+            
+            # Check if policy changed
+            if best_action != old_action:
+                policy_stable = False
+        
+        iterations += 1
+        
+        # Check if policy converged
+        if policy_stable:
+            break
+        
+        # Iteration check
+        if iterations > 1000:
+            print("Warning: Max iterations reached, stopping early")
+            break
+    
+    print(f"Policy Iteration converged in {iterations} iterations")
+    
+    path = extract_path(maze, policy)
+    
+    return ValueIterationResult(
+        policy=policy,
+        values=V,
+        path=path,
+        path_length=len(path),
+        nodes_explored=len(V),
+        iterations=iterations,
+    )
 
 # Follow the policy from start to goal to extract the path.
 def extract_path(maze: MazeData, policy: Dict[Coord, str], max_steps: int = 1000) -> List[Coord]:
@@ -167,7 +275,7 @@ def extract_path(maze: MazeData, policy: Dict[Coord, str], max_steps: int = 1000
             break
         
         if next_state in visited:
-            print("Warning: Cycle detected in policy")
+            print("Cycle detected in policy")
             break
         
         path.append(next_state)
@@ -178,7 +286,7 @@ def extract_path(maze: MazeData, policy: Dict[Coord, str], max_steps: int = 1000
     return path if current == maze.goal else []
 
 
-def prettify_policy(policy: Dict[Coord, Optional[str]], grid: List[List[int]]) -> str:
+def draw_policy(policy: Dict[Coord, Optional[str]], grid: List[List[int]]) -> str:
     rows, cols = len(grid), len(grid[0])
     
     arrow_map = {
@@ -215,44 +323,3 @@ def print_value_heatmap(V: Dict[Coord, float], grid: List[List[int]], num_sample
     for state, value in sorted_states[:num_samples]:
         desc = "GOAL" if value == goal_reward else ""
         print(f"{str(state):<15} | {value:<15.2f} | {desc}")
-
-
-# Example usage
-# if __name__ == '__main__':
-#     # Load a maze
-#     maze = load_maze("/Users/mariameshi/Documents/year_5/AI/mazes/maze_19x19_seed42.json")
-
-#     print(f"Maze size: {len(maze.grid)}x{len(maze.grid[0])}")
-#     print(f"Start: {maze.start}")
-#     print(f"Goal: {maze.goal}")
-#     print(f"\nReward Structure:")
-#     print(f"  Normal direction_deltas: {step_cost}")
-#     print(f"  Goal: {goal_reward}")
-#     print()
-    
-#     # Run Value Iteration
-#     policy, value_function = value_iteration_with_walls(maze, gamma=gamma, theta=theta)
-    
-#     # Extract path
-#     path = extract_path(maze, policy)
-    
-#     print(f"\nResults:")
-#     print(f"  Path length: {len(path)} steps")
-#     print(f"  Start value: {value_function[maze.start]:.2f}")
-#     print(f"  Goal value: {value_function[maze.goal]:.2f}")
-    
-#     # Calculate expected total reward if following policy
-#     expected_reward = value_function[maze.start]
-#     print(f"  Expected total reward: {expected_reward:.2f}")
-    
-#     print("\nOptimal Policy Visualization:")
-#     print(prettify_policy(policy, maze.grid))
-    
-#     # Show value samples
-#     print_value_heatmap(value_function, maze.grid)
-    
-#     # Path preview
-#     if path:
-#         print(f"\nPath (first 10 steps): {path[:10]}")
-#     else:
-#         print("\nWarning: No valid path found!")

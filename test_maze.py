@@ -1,12 +1,11 @@
-from src.maze_generator import generate_maze
-from src.maze_generator import print_maze
-from src.maze_generator import plot_maze
+from src.create_maze import generate_maze, generate_imperfect_maze
+from src.create_maze import print_maze
+from src.create_maze import plot_maze
 
 
-# maze = generate_maze(8, 8, seed=42)
-maze = generate_maze(5, 5)
+maze = imperfect_maze = generate_imperfect_maze(8, 8, seed=42, wall_removal_prob=0.2)
 plot_maze(maze.grid, maze.start, maze.goal)
-print_maze(maze.grid, maze.start, maze.goal)
+# print_maze(maze.grid, maze.start, maze.goal)
 
 # maze = generate_maze(15, 15)
 # maze  = generate_maze(50, 50)
