@@ -1,12 +1,8 @@
-# ==========================
 # Python
-# ==========================
 __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
 
 # Distribution / packaging
 build/
@@ -34,31 +30,26 @@ ENV/
 # ==========================
 .DS_Store
 
-# ==========================
-# Jupyter Notebooks
-# ==========================
-.ipynb_checkpoints/
-
-# ==========================
 # Experiment Outputs
-# ==========================
-results/
-plots/
-*.csv
-*.json
+# results/
+# plots/
+# *.csv
+# *.json
 
-# ==========================
 # Logs
-# ==========================
 *.log
 
-# ==========================
 # Temporary files
-# ==========================
 *.tmp
 *.swp
 
-mazelib/
+# Obsolete files
+scripts/
+old_videos/
+
+
+
+
 
 
 

@@ -1,0 +1,25 @@
+algorithm,maze_size,path_length,nodes_explored,iterations,runtime_ms
+DFS,9x9,25,38,--,0.04
+DFS,15x15,29,63,--,0.058
+DFS,19x19,37,209,--,0.17
+DFS,29x29,103,422,--,0.41
+BFS,9x9,17,53,--,0.043
+BFS,15x15,29,138,--,0.1
+BFS,19x19,37,222,--,0.159
+BFS,29x29,57,503,--,0.386
+A* Manhattan,9x9,17,40,--,0.056
+A* Manhattan,15x15,29,104,--,0.118
+A* Manhattan,19x19,37,147,--,0.18
+A* Manhattan,29x29,57,349,--,0.415
+A* Euclidean,9x9,17,44,--,0.055
+A* Euclidean,15x15,29,111,--,0.125
+A* Euclidean,19x19,37,187,--,0.229
+A* Euclidean,29x29,57,433,--,0.483
+Value Iteration,9x9,17,53,17,2.237
+Value Iteration,15x15,29,140,29,10.128
+Value Iteration,19x19,37,222,37,20.403
+Value Iteration,29x29,57,503,57,69.128
+Policy Iteration,9x9,17,53,13,4.276
+Policy Iteration,15x15,29,140,32,20.67
+Policy Iteration,19x19,37,222,25,28.612
+Policy Iteration,29x29,57,503,51,114.106
