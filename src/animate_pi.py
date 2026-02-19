@@ -20,11 +20,11 @@ arrows = {
 def policy_iteration_frames(
     maze: MazeData,
     gamma: float = 0.9,
-    theta: float = 1e-6,
+    theta: float = 1e-4,
     max_frames: int = 100
 ) -> List[Tuple[int, Dict, Dict, bool]]:
 
-    from src.mdp_algorithms import get_states, get_next_state, get_reward, actions
+    from src.mdp_algorithms import get_states, get_next_state, get_reward, actions, K_EVAL
     
     states = get_states(maze)
     goal = maze.goal
@@ -41,7 +41,8 @@ def policy_iteration_frames(
     iteration = 0
     
     while True:
-        while True:
+        # Modified policy evaluation: at most K_EVAL sweeps (mirrors mdp_algorithms.py)
+        for _ in range(K_EVAL):
             delta = 0
             
             for s in states:
@@ -60,7 +61,7 @@ def policy_iteration_frames(
                 
                 delta = max(delta, abs(v_old - V[s]))
             
-            # Check if values converged for this policy
+            # Early exit if values converged within K_EVAL sweeps
             if delta < theta:
                 break
         
@@ -107,7 +108,7 @@ def policy_iteration_frames(
 def animate_policy_iteration(
     maze: MazeData,
     gamma: float = 0.9,
-    theta: float = 1e-6,
+    theta: float = 1e-4,
     output_dir: str = "videos",
     fps: int = 2,
     show: bool = True,
@@ -186,7 +187,7 @@ def animate_policy_iteration(
         iteration, values, policy, converged = frames[frame_idx]
         
         # Update title
-        status = "Function has converges" if converged else "Iterating"
+        status = "Converged" if converged else "Iterating"
         fig.suptitle(f"Policy Iteration, k = {iteration} ({status})", fontsize=16)
         
         # Update value heatmap

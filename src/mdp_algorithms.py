@@ -15,8 +15,10 @@ class ValueIterationResult:
 
 
 # Algorithm parameters
-gamma = 0.9              # discount factor
-theta = 1e-4              # convergence threshold
+gamma  = 0.9    # discount factor
+theta  = 1e-4   # convergence threshold — loose enough to be fast, tight enough for optimal paths
+K_EVAL = 10     # modified policy iteration: max inner evaluation sweeps per outer iteration
+                # K=1 behaves like value iteration, K=∞ is pure policy iteration, 10 is a good sweet spot
 
 # Rewards
 step_cost = -0.04     
@@ -176,9 +178,8 @@ def policy_iteration(maze: MazeData, gamma=gamma, theta=theta) -> ValueIteration
     
     # Policy Iteration: alternate evaluation and improvement
     while True:
-        # Policy Evaluation 
-        # Compute V^π for current policy
-        while True:
+        # Policy Evaluation
+        for _ in range(K_EVAL):
             delta = 0
             
             for s in states:
@@ -197,7 +198,7 @@ def policy_iteration(maze: MazeData, gamma=gamma, theta=theta) -> ValueIteration
                 
                 delta = max(delta, abs(v_old - V[s]))
             
-            # Check if values converged for this policy
+            # Early exit if values already converged within K_EVAL sweeps
             if delta < theta:
                 break
         

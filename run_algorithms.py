@@ -95,47 +95,7 @@ def main():
     
     search_algorithms = ["DFS", "BFS", "A* Manhattan", "A* Euclidean"]
 
-    # --- Run all algorithms and collect results ---
-    # print("Running all algorithms")
-    # results = {}
-    # for name, function in algorithms.items():
-    #     results[name] = {}
-    #     for size, maze in mazes.items():
-    #         results[name][size] = function(maze)
-
-    
-    # # Search algorithm plots
-    # for algo_name in search_algorithms:
-    #     for size, maze in mazes.items():
-    #         result = results[algo_name][size]
-    #         plot_maze(maze.grid, maze.start, maze.goal, 
-    #                  path=result.path, title=f"{algo_name}, {size}", save_path=f"plots/{algo_name.replace(' ', '_').lower()}_{size}.png")
-    
-    # # MDP plots
-
-    # for size, maze in mazes.items():
-    #     vi_result = results["Value Iteration"][size]
-    #     pi_result = results["Policy Iteration"][size]
-        
-    #     plot_mdp_results(maze, vi_result, "Value Iteration", size, save_dir="plots")
-    #     plot_mdp_results(maze, pi_result, "Policy Iteration", size, save_dir="plots")
-
-    # # Summary table 
-    # for size in mazes:
-    #     print("\n" + "="*80)
-    #     print(f"MAZE SIZE: {size}")
-    #     print("="*80)
-    #     print(f"{'Algorithm':<20} | {'Path Length':<12} | {'Nodes Explored':<15} | {'Iterations':<12}")
-    #     print("-"*80)
-        
-    #     for name in algorithms:
-    #         result = results[name][size]
-    #         iterations = result.iterations if hasattr(result, 'iterations') else "--"
-    #         print(f"{name:<20} | {result.path_length:<12} | {result.nodes_explored:<15} | {iterations:<12}")
-        
-    #     print("="*80)
-
-    print("Running all algorithms...\n")
+    print("Running all algorithms\n")
     results = {name: {} for name in algorithms}
     timings = {name: {} for name in algorithms}   # ms, keyed same as results
 
@@ -151,76 +111,76 @@ def main():
     print_summary(results, timings, algorithms, mazes)
 
     # ── CSV export ───────────────────────────────────────────────────────────
-    csv_rows = []
-    for name in algorithms:
-        for size in mazes:
-            result = results[name][size]
-            iters  = result.iterations if hasattr(result, "iterations") else "--"
-            csv_rows.append({
-                "algorithm":      name,
-                "maze_size":      size,
-                "path_length":    result.path_length,
-                "nodes_explored": result.nodes_explored,
-                "iterations":     iters,
-                "runtime_ms":     round(timings[name][size], 3),
-            })
+    # csv_rows = []
+    # for name in algorithms:
+    #     for size in mazes:
+    #         result = results[name][size]
+    #         iters  = result.iterations if hasattr(result, "iterations") else "--"
+    #         csv_rows.append({
+    #             "algorithm":      name,
+    #             "maze_size":      size,
+    #             "path_length":    result.path_length,
+    #             "nodes_explored": result.nodes_explored,
+    #             "iterations":     iters,
+    #             "runtime_ms":     round(timings[name][size], 3),
+    #         })
 
-    save_csv(csv_rows, csv_path)
+    # save_csv(csv_rows, csv_path)
 
     # ── Search algorithm plots ────────────────────────────────────────────────
-    os.makedirs(plot_dir, exist_ok=True)
-    for algo_name in search_algorithms:
-        for size, maze in mazes.items():
-            result    = results[algo_name][size]
-            safe_name = algo_name.replace(" ", "_").replace("*", "star").lower()
-            save_path = f"{plot_dir}/{safe_name}_{size}.png"
-            plot_maze(
-                maze.grid, maze.start, maze.goal,
-                path=result.path,
-                title=f"{algo_name} — {size}",
-                save_path=save_path,
-            )
+    # os.makedirs(plot_dir, exist_ok=True)
+    # for algo_name in search_algorithms:
+    #     for size, maze in mazes.items():
+    #         result    = results[algo_name][size]
+    #         safe_name = algo_name.replace(" ", "_").replace("*", "star").lower()
+    #         save_path = f"{plot_dir}/{safe_name}_{size}.png"
+    #         plot_maze(
+    #             maze.grid, maze.start, maze.goal,
+    #             path=result.path,
+    #             title=f"{algo_name} — {size}",
+    #             save_path=save_path,
+    #         )
 
     # ── MDP plots ─────────────────────────────────────────────────────────────
-    for size, maze in mazes.items():
-        vi_result = results["Value Iteration"][size]
-        pi_result = results["Policy Iteration"][size]
+    # for size, maze in mazes.items():
+    #     vi_result = results["Value Iteration"][size]
+    #     pi_result = results["Policy Iteration"][size]
 
-        plot_mdp_results(maze, vi_result, "Value Iteration",  size, save_dir=plot_dir)
-        plot_mdp_results(maze, pi_result, "Policy Iteration", size, save_dir=plot_dir)
+    #     plot_mdp_results(maze, vi_result, "Value Iteration",  size, save_dir=plot_dir)
+    #     plot_mdp_results(maze, pi_result, "Policy Iteration", size, save_dir=plot_dir)
 
 
     # Generating animation for each algorithm
-    # for size, maze in mazes.items():
-    #     print(f"\nCreating algorithm animations")
+    for size, maze in mazes.items():
+        print(f"\nCreating algorithm animations")
         
-    #     # Search algorithm videos
-    #     search_results = {name: results[name][size] for name in search_algorithms}
-    #     animate_search_algorithms(
-    #         maze,
-    #         search_results,
-    #         output_dir="videos",
-    #         fps=5,
-    #     )
+        # Search algorithm animations
+        search_results = {name: results[name][size] for name in search_algorithms}
+        animate_search_algorithms(
+            maze,
+            search_results,
+            output_dir=f"videos/{size}",
+            fps=5,
+        )
         
-    #     # MDP videos
-    #     animate_value_iteration(
-    #         maze,
-    #         gamma=0.9,
-    #         theta=1e-6,
-    #         output_dir="videos",
-    #         fps=2,
-    #         show=False,  
-    #     )
+        # MDP animations
+        animate_value_iteration(
+            maze,
+            gamma=0.9,
+            theta=1e-6,
+            output_dir=f"videos/{size}",
+            fps=2,
+            show=False,  
+        )
 
-    #     animate_policy_iteration(
-    #         maze,
-    #         gamma=0.9,
-    #         theta=1e-6,
-    #         output_dir="videos",
-    #         fps=2,
-    #         show=True,
-    #     )
+        animate_policy_iteration(
+            maze,
+            gamma=0.9,
+            theta=1e-6,
+            output_dir=f"videos/{size}",
+            fps=2,
+            show=True,
+        )
 
 
 if __name__ == "__main__":

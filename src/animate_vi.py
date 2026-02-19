@@ -19,7 +19,7 @@ arrows = {
 def value_iteration_frames(
     maze: MazeData,
     gamma: float = 0.9,
-    theta: float = 1e-6,
+    theta: float = 1e-4,
     max_frames: int = 100
 ) -> List[Tuple[int, Dict, Dict, bool]]:
   
@@ -173,8 +173,8 @@ def animate_value_iteration(
         iteration, values, policy, converged = frames[frame_idx]
         
         # Update title
-        status = "CONVERGED" if converged else "Running..."
-        fig.suptitle(f"Value Iteration — Iteration {iteration} ({status})", fontsize=16)
+        status = "Converged" if converged else "Iteration"
+        fig.suptitle(f"Value Iterating k = {iteration} ({status})", fontsize=16)
         
         # Update value heatmap
         value_grid = np.full((rows, cols), np.nan)
