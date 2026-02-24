@@ -46,6 +46,7 @@ ENV/
 # Obsolete files
 scripts/
 old_videos/
+plots_1/
 
 
 
