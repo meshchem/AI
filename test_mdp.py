@@ -4,7 +4,6 @@ from src.mdp_algorithms import value_iteration, policy_iteration, draw_policy
 
 
 def timer():
-    """Return a callable that gives elapsed ms since creation."""
     t0 = time.perf_counter()
     return lambda: (time.perf_counter() - t0) * 1000
 
@@ -66,9 +65,9 @@ def test_convergence_speed():
     header(3, "Convergence Speed")
 
     maze_files = [
-        ("mazes/maze_9x9_seed1337.json",  "9x9"),
-        ("mazes/maze_15x15_seed1337.json", "15x15"),
-        ("mazes/maze_19x19_seed1337.json", "19x19"),
+        ("mazes_1/maze_9x9_seed1337.json",  "9x9"),
+        ("mazes_1/maze_15x15_seed1337.json", "15x15"),
+        ("mazes_1/maze_19x19_seed1337.json", "19x19"),
     ]
 
     print(f"  {'Maze':<8} {'VI iters':<10} {'PI iters':<10} {'VI ms':<10} {'PI ms':<10} {'Speedup'}")
@@ -123,7 +122,7 @@ def test_gamma_sensitivity():
 def test_path_validity():
     header(6, "Path Validity")
 
-    maze = load_maze("mazes/maze_15x15_seed1337.json")
+    maze = load_maze("mazes_1/maze_15x15_seed1337.json")
 
     for name, fn in [("Value Iteration", value_iteration), ("Policy Iteration", policy_iteration)]:
         t = timer(); result = fn(maze); elapsed = t()

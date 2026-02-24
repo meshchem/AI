@@ -19,7 +19,7 @@ MAZE_FILES = {
     "19×19": "mazes/maze_19x19_seed67.json",
     "29×29": "mazes/maze_29x29_seed67.json",
     "39x39": "mazes/maze_39x39_seed67.json",
-    "99x99": "mazes/maze_99x99_seed67.json",
+    # "99x99": "mazes/maze_99x99_seed67.json",
 }
 
 FILE_DIR = "plots/comparison"

@@ -2,7 +2,7 @@ from src.create_maze import load_maze, plot_maze
 from src.dfs import dfs
 from src.bfs import bfs
 from src.astar import astar_manhattan, astar_euclidean
-from src.old_mdp.mdp import value_iteration, policy_iteration
+from src.mdp_algorithms import value_iteration, policy_iteration
 from src.mdp_plots import plot_mdp_results
 
 
@@ -14,9 +14,9 @@ mazes = {
     # "9x9  ":   load_maze("mazes/maze_9x9_seed42.json"),
     # "15x15": load_maze("mazes/maze_15x15_seed42.json"),
     # "19x19": load_maze("mazes/maze_19x19_seed42.json"),
-     "9x9  ":   load_maze("mazes/maze_9x9_seed1337.json"),
-    "15x15": load_maze("mazes/maze_15x15_seed1337.json"),
-    "19x19": load_maze("mazes/maze_19x19_seed1337.json"),
+    #  "9x9  ":   load_maze("mazes/maze_9x9_seed1337.json"),
+    # "15x15": load_maze("mazes/maze_15x15_seed1337.json"),
+    "19x19": load_maze("mazes_1/maze_19x19_seed1337.json"),
     
    
 }

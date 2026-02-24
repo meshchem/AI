@@ -3,15 +3,16 @@ from src.create_maze import generate_maze, generate_imperfect_maze, save_maze, p
 
 # Config
 SIZES = [
-    # (5, 5),
-    # (8, 8),
-    # (10, 10),
-    # (15, 15),
-    # (20, 20),
-    (50, 50),
+    (5, 5),
+    (8, 8),
+    (10, 10),
+    (15, 15),
+    (20, 20),
 ]
+
 SEEDS = [67]
 OUTPUT_DIR = "mazes"
+WALL_REMOVAL_PROB = 0.2
 
 
 def main():
@@ -22,29 +23,8 @@ def main():
     for rows, cols in SIZES:
         for seed in SEEDS:
            
-        #    # Maze with one unique path (perfect maze)
-        #     maze = generate_maze(rows, cols, seed=seed)
-
-        #     # Start/goal check
-        #     assert maze.grid[maze.start[0]][maze.start[1]] == 0, \
-        #         f"Start is a wall! (seed={seed}, size={rows}x{cols})"
-        #     assert maze.grid[maze.goal[0]][maze.goal[1]] == 0, \
-        #         f"Goal is a wall! (seed={seed}, size={rows}x{cols})"
-
-        #     filename = f"maze_{rows}x{cols}_seed{seed}_perfect.json"
-        #     filepath = os.path.join(OUTPUT_DIR, filename)
-        #     save_maze(maze, filepath)
-
-        #     generated.append((filename, rows, cols, seed, "perfect"))
-        #     print(f"Generated: {filename}")
-        #     print(f"  Grid size : {len(maze.grid)} x {len(maze.grid[0])} (internal)")
-        #     print(f"  Start     : {maze.start}")
-        #     print(f"  Goal      : {maze.goal}")
-        #     print_maze(maze.grid, maze.start, maze.goal)
-        #     print()
-
-            #  Maze with multiple paths (potentially)
-            imperfect_maze = generate_imperfect_maze(rows, cols, seed=seed, wall_removal_prob=0.2)
+            #  Maze with multiple paths)
+            imperfect_maze = generate_imperfect_maze(rows, cols, seed=seed, wall_removal_prob= WALL_REMOVAL_PROB)
 
             filename_imp = f"maze_{rows*2-1}x{cols*2-1}_seed{seed}.json"
             filepath_imp = os.path.join(OUTPUT_DIR, filename_imp)
