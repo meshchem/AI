@@ -21,27 +21,27 @@ def dfs(maze: MazeData) -> SearchResult:
     stack: List[List[Coord]] = [[start]]
 
     visited: List[Coord] = []
-    seen = set()
-    seen.add(start)
+    explored = set()
+    explored.add(start)
 
     while stack:
-        path = stack.pop()          # LIFO — take the most recently added path
-        current = path[-1]          # the node at the end of this path
+        current_path = stack.pop()          # LIFO — take the most recently added current_path
+        current_node = current_path[-1]          # the node at the end of this current_path
 
-        visited.append(current)
+        visited.append(current_node)
 
-        if current == goal:
+        if current_node == goal:
             return SearchResult(
-                path=path,
+                path=current_path,
                 visited=visited,
-                path_length=len(path),
+                path_length=len(current_path),
                 nodes_explored=len(visited),
             )
 
-        for neighbour in get_neighbours(grid, current):
-            if neighbour not in seen:
-                seen.add(neighbour)
-                stack.append(path + [neighbour])  # extend path to this neighbour
+        for neighbour in get_neighbours(grid, current_node):
+            if neighbour not in explored:
+                explored.add(neighbour)
+                stack.append(current_path + [neighbour])  # extend path to this neighbour
 
     # No path found
     return SearchResult(

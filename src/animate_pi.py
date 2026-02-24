@@ -19,12 +19,12 @@ arrows = {
 
 def policy_iteration_frames(
     maze: MazeData,
-    gamma: float = 0.9,
-    theta: float = 1e-4,
+    discount_factor: float = 0.9,
+    theta: float = 0.0001,
     max_frames: int = 100
 ) -> List[Tuple[int, Dict, Dict, bool]]:
 
-    from src.mdp_algorithms import get_states, get_next_state, get_reward, actions, K_EVAL
+    from src.mdp_algorithms import get_states, get_next_state, get_reward, actions, k_eval
     
     states = get_states(maze)
     goal = maze.goal
@@ -42,7 +42,7 @@ def policy_iteration_frames(
     
     while True:
         # Modified policy evaluation: at most K_EVAL sweeps (mirrors mdp_algorithms.py)
-        for _ in range(K_EVAL):
+        for _ in range(k_eval):
             delta = 0
             
             for s in states:
@@ -57,7 +57,7 @@ def policy_iteration_frames(
                 reward = get_reward(maze, s, action)
                 
                 # V^π(s) = R(s,π(s)) + γ * V^π(s')
-                V[s] = reward + gamma * V[s_next]
+                V[s] = reward + discount_factor * V[s_next]
                 
                 delta = max(delta, abs(v_old - V[s]))
             
@@ -81,7 +81,7 @@ def policy_iteration_frames(
             for a in actions:
                 s_next = get_next_state(maze, s, a)
                 reward = get_reward(maze, s, a)
-                q_value = reward + gamma * V[s_next]
+                q_value = reward + discount_factor * V[s_next]
                 
                 if q_value > best_value:
                     best_value = q_value
@@ -107,7 +107,7 @@ def policy_iteration_frames(
 
 def animate_policy_iteration(
     maze: MazeData,
-    gamma: float = 0.9,
+    discount_factor: float = 0.9,
     theta: float = 1e-4,
     output_dir: str = "videos",
     fps: int = 2,
@@ -122,7 +122,7 @@ def animate_policy_iteration(
     
     # Compute frames
     print(f"Generating Policy Iteration frames")
-    frames = policy_iteration_frames(maze, gamma, theta)
+    frames = policy_iteration_frames(maze, discount_factor, theta)
     print(f"  Captured {len(frames)} iterations")
     
     # Set up figure with two subplots

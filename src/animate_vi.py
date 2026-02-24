@@ -18,8 +18,8 @@ arrows = {
 
 def value_iteration_frames(
     maze: MazeData,
-    gamma: float = 0.9,
-    theta: float = 1e-4,
+    discount_factor: float = 0.9,
+    theta: float = 0.0001,
     max_frames: int = 100
 ) -> List[Tuple[int, Dict, Dict, bool]]:
   
@@ -50,7 +50,7 @@ def value_iteration_frames(
             for a in actions:
                 s_next = get_next_state(maze, s, a)
                 reward = get_reward(maze, s, a)
-                q_value = reward + gamma * V[s_next]
+                q_value = reward + discount_factor * V[s_next]
                 action_values.append(q_value)
             
             V[s] = max(action_values)
@@ -71,7 +71,7 @@ def value_iteration_frames(
             for a in actions:
                 s_next = get_next_state(maze, s, a)
                 reward = get_reward(maze, s, a)
-                q_value = reward + gamma * V[s_next]
+                q_value = reward + discount_factor * V[s_next]
                 
                 if q_value > best_value:
                     best_value = q_value
@@ -92,7 +92,7 @@ def value_iteration_frames(
 def animate_value_iteration(
     
     maze: MazeData,
-    gamma: float = 0.9,
+    discount_factor: float = 0.9,
     theta: float = 1e-6,
     output_dir: str = "videos",
     fps: int = 2,
@@ -108,7 +108,7 @@ def animate_value_iteration(
     
     # Compute frames
     print(f"Generating Value Iteration frames")
-    frames = value_iteration_frames(maze, gamma, theta)
+    frames = value_iteration_frames(maze, discount_factor, theta)
     print(f"  Captured {len(frames)} iterations")
     
     # Set up figure with two subplots

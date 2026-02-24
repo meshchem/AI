@@ -15,29 +15,33 @@ arrow = {
 }
 
 
-# Plot the value function as a heatmap overlaid on the maze.
-# Brighter cells have higher value (closer to goal under optimal policy).
+# Plot the value function as a heatmap and numerical values overlaid on the maze.
 def plot_value_function(maze: MazeData, result: ValueIterationResult, title: str = "Value Function", save_path: str = None):
   
     grid = maze.grid
     rows, cols = len(grid), len(grid[0])
 
-    # Build a 2D array of values — walls get NaN so they render separately
     value_grid = np.full((rows, cols), np.nan)
     for (r, c), v in result.values.items():
         value_grid[r, c] = v
 
     fig, ax = plt.subplots(figsize=(7, 7))
 
-    # Draw walls in dark grey
     wall_grid = np.where(np.array(grid) == 1, 1.0, np.nan)
     ax.imshow(wall_grid, cmap="gray_r", vmin=0, vmax=1)
 
-    # Overlay value heatmap on free cells
     im = ax.imshow(value_grid, cmap="YlGnBu", interpolation="nearest")
     plt.colorbar(im, ax=ax, fraction=0.046, label="V(s)")
 
-    # Mark start and goal
+    # Annotate each free cell with its value
+    for (r, c), v in result.values.items():
+        ax.text(
+            c, r, f"{v:.2f}",
+            ha="center", va="center",
+            fontsize=4, color="black",
+            fontweight="bold"
+        )
+
     ax.scatter(maze.start[1], maze.start[0], c="green", s=100, zorder=5, label="Start")
     ax.scatter(maze.goal[1],  maze.goal[0],  c="red",   s=100, zorder=5, label="Goal")
 
@@ -50,7 +54,7 @@ def plot_value_function(maze: MazeData, result: ValueIterationResult, title: str
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Saved plot to {save_path}")
-        plt.close()  # Close after saving
+        plt.close()
     else:
         plt.show()
 

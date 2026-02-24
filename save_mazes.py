@@ -3,10 +3,12 @@ from src.create_maze import generate_maze, generate_imperfect_maze, save_maze, p
 
 # Config
 SIZES = [
-    (5, 5),
-    (8, 8),
-    (10, 10),
-    (15, 15),
+    # (5, 5),
+    # (8, 8),
+    # (10, 10),
+    # (15, 15),
+    # (20, 20),
+    (50, 50),
 ]
 SEEDS = [67]
 OUTPUT_DIR = "mazes"

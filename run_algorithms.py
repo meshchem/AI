@@ -18,10 +18,12 @@ maze_files = {
         "15x15": "mazes/maze_15x15_seed67.json",
         "19x19": "mazes/maze_19x19_seed67.json",
         "29x29": "mazes/maze_29x29_seed67.json",
+        "39x39": "mazes/maze_39x39_seed67.json",
+        # "99x99": "mazes/maze_99x99_seed67.json",
     }
 
 csv_path    = "results/results.csv"
-plot_dir   = "plots"
+plot_dir   = "plots/seed67"
 video_dir  = "videos"
 
 csv_columns = [
@@ -128,26 +130,26 @@ def main():
     # save_csv(csv_rows, csv_path)
 
     # ── Search algorithm plots ────────────────────────────────────────────────
-    # os.makedirs(plot_dir, exist_ok=True)
-    # for algo_name in search_algorithms:
-    #     for size, maze in mazes.items():
-    #         result    = results[algo_name][size]
-    #         safe_name = algo_name.replace(" ", "_").replace("*", "star").lower()
-    #         save_path = f"{plot_dir}/{safe_name}_{size}.png"
-    #         plot_maze(
-    #             maze.grid, maze.start, maze.goal,
-    #             path=result.path,
-    #             title=f"{algo_name} — {size}",
-    #             save_path=save_path,
-    #         )
+    os.makedirs(plot_dir, exist_ok=True)
+    for algo_name in search_algorithms:
+        for size, maze in mazes.items():
+            result    = results[algo_name][size]
+            safe_name = algo_name.replace(" ", "_").replace("*", "star").lower()
+            save_path = f"{plot_dir}/{safe_name}_{size}.png"
+            plot_maze(
+                maze.grid, maze.start, maze.goal,
+                path=result.path,
+                title=f"{algo_name} — {size}",
+                save_path=save_path,
+            )
 
     # ── MDP plots ─────────────────────────────────────────────────────────────
-    # for size, maze in mazes.items():
-    #     vi_result = results["Value Iteration"][size]
-    #     pi_result = results["Policy Iteration"][size]
+    for size, maze in mazes.items():
+        vi_result = results["Value Iteration"][size]
+        pi_result = results["Policy Iteration"][size]
 
-    #     plot_mdp_results(maze, vi_result, "Value Iteration",  size, save_dir=plot_dir)
-    #     plot_mdp_results(maze, pi_result, "Policy Iteration", size, save_dir=plot_dir)
+        plot_mdp_results(maze, vi_result, "Value Iteration",  size, save_dir=plot_dir)
+        plot_mdp_results(maze, pi_result, "Policy Iteration", size, save_dir=plot_dir)
 
 
     # Generating animation for each algorithm
@@ -166,7 +168,7 @@ def main():
         # MDP animations
         animate_value_iteration(
             maze,
-            gamma=0.9,
+            discount_factor=0.9,
             theta=1e-6,
             output_dir=f"videos/{size}",
             fps=2,
@@ -175,7 +177,7 @@ def main():
 
         animate_policy_iteration(
             maze,
-            gamma=0.9,
+            discount_factor=0.9,
             theta=1e-6,
             output_dir=f"videos/{size}",
             fps=2,

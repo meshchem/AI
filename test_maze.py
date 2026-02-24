@@ -3,7 +3,7 @@ from src.create_maze import print_maze
 from src.create_maze import plot_maze
 
 
-maze = imperfect_maze = generate_imperfect_maze(8, 8, seed=42, wall_removal_prob=0.2)
+maze = imperfect_maze = generate_imperfect_maze(20, 20, seed=67, wall_removal_prob=0.2)
 plot_maze(maze.grid, maze.start, maze.goal)
 # print_maze(maze.grid, maze.start, maze.goal)
 

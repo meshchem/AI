@@ -4,9 +4,6 @@ https://github.com/john-science/mazelib
 Licensed under MIT License.
 
 Only the maze generation component is reused.
-All search algorithms are original implementations.
-
-! mazelib generates a grid of size (2*rows+1) x (2*cols+1), !
 """
 
 import json
@@ -65,8 +62,8 @@ def generate_imperfect_maze(
     for r in range(2, len(grid) - 2):
         for c in range(2, len(grid[0]) - 2):
             if grid[r][c] == 1:  # it's a wall
-                # Only remove if it has free cells on opposite sides
-                # (horizontal or vertical walls, not corners)
+                # Only remove if there is free cells on opposite sides
+                # only horizontal or vertical walls, no corners
                 has_h_passage = (grid[r][c-1] == 0 and grid[r][c+1] == 0)
                 has_v_passage = (grid[r-1][c] == 0 and grid[r+1][c] == 0)
                 if has_h_passage or has_v_passage:
@@ -83,8 +80,7 @@ def generate_imperfect_maze(
 
 
 #  Return all passable (non-wall) neighbours of a cell.
-#  Only considers 4-directional movement (up, down, left, right).
-
+#  4-directional movement
 def get_neighbours(grid: List[List[int]], cell: Coord) -> List[Coord]:
     r, c = cell
     rows, cols = len(grid), len(grid[0])
@@ -95,7 +91,7 @@ def get_neighbours(grid: List[List[int]], cell: Coord) -> List[Coord]:
             neighbours.append((nr, nc))
     return neighbours
 
-# Visualise maze in console using ASCII characters:
+# Visualise maze using ASCII:
 def print_maze(grid: List[List[int]], start: Coord = None, goal: Coord = None):
     for r, row in enumerate(grid):
         line = ""
