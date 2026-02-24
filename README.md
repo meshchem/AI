@@ -95,6 +95,7 @@ MAZE_FILES = {
 python3 run_algorithms.py
 
 this will produce a csv results file and plots for each maze size 
+Will be saved to plots/
 
 ### 4. Create animations
 
@@ -111,7 +112,7 @@ MAZE_FILES = {
 
 python3 run_animations.py
 
-Will produce a video animations of each algorithms solving the maze 
+Will produce a video animations of each algorithms solving the maze, this will be saved to videos/ 
 
 ### 4. Analyse algorithsm
 
@@ -128,4 +129,5 @@ MAZE_FILES = {
 python3 analyse.py 
 
 This will produce comparison plots of different evaluation metrics between the search algorithms
+Will be saved to plots/comparison
 
