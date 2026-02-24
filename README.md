@@ -113,7 +113,7 @@ python3 run_animations.py
 
 Will produce a video animations of each algorithms solving the maze 
 
-### 4. Analyse algorithsm
+### 6. Analyse algorithms
 
 In analyse.py, insert mazes you want to solve:
 
