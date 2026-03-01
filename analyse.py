@@ -175,8 +175,9 @@ def collect_step_cost_results(maze):
     return vi_rows, pi_rows
 
 # ─────────────────────────────────────────────
-# Plots (only all-sizes / multi-maze plots)
+# Plots 
 # ─────────────────────────────────────────────
+
 def plot_nodes_explored(results, sizes):
     print("Plotting: nodes explored vs maze size")
     fig, ax = plt.subplots(figsize=(9, 5))
